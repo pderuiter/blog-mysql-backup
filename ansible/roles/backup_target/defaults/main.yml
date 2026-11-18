@@ -1,0 +1,2 @@
+---
+backup_target_mysql_host: "{{ groups['mysql'][0] }}"

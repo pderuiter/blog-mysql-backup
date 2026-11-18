@@ -1,0 +1,29 @@
+---
+- name: Install MySQL server
+  ansible.builtin.apt:
+    name: "{{ mysql_server_packages }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Start and enable MySQL
+  ansible.builtin.service:
+    name: mysql
+    state: started
+    enabled: true
+
+- name: Create the database to back up
+  community.mysql.mysql_db:
+    name: "{{ mysql_database }}"
+    state: present
+    login_unix_socket: "{{ mysql_server_socket }}"
+
+- name: Create the backup user
+  community.mysql.mysql_user:
+    name: "{{ mysql_user }}"
+    host: localhost
+    password: "{{ mysql_password }}"
+    priv: "{{ mysql_server_backup_privileges }}"
+    state: present
+    login_unix_socket: "{{ mysql_server_socket }}"
+  no_log: true

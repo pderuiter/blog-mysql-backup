@@ -1,0 +1,9 @@
+---
+# The post's second play: targets the backup server and delegates to the
+# MySQL server, so rsync runs there and pushes the backup directory here.
+- name: Copy backup to remote server
+  ansible.posix.synchronize:
+    src: "{{ mysql_backup_dir }}/"
+    dest: "{{ backup_dest }}"
+    private_key: "{{ ssh_key }}"
+  delegate_to: "{{ mysql_backup_source_host }}"

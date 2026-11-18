@@ -1,0 +1,33 @@
+---
+- name: Prepare the MySQL server and take the backup
+  hosts: mysql
+  roles:
+    - role: mysql_server
+    - role: mysql_backup
+
+- name: Prepare the backup server
+  hosts: backup
+  roles:
+    - role: backup_target
+  tasks:
+    # The post connects to the backup server as backup_user (its ansible_user).
+    # This play needs an admin account to create that user, so the copy below
+    # runs against an in-memory alias of the same host whose ansible_user is backup_user.
+    - name: Add an alias of the backup server that connects as the backup user
+      ansible.builtin.add_host:
+        name: "{{ item }}-rsync"
+        groups: backup_rsync
+        ansible_host: "{{ hostvars[item]['ansible_host'] | default(item) }}"
+        ansible_user: "{{ backup_user }}"
+      loop: "{{ ansible_play_hosts }}"
+      changed_when: false
+
+- name: Copy the backup to the backup server
+  hosts: backup_rsync
+  gather_facts: false
+  become: false
+  tasks:
+    - name: Copy the backup
+      ansible.builtin.include_role:
+        name: mysql_backup
+        tasks_from: sync

@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  role_name: mysql_backup
+  author: Patrick de Ruiter
+  description: The post's MySQL backup playbook as a role (dump on the MySQL server, rsync to the backup server)
+  license: MIT
+  min_ansible_version: "2.16"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - noble
+dependencies: []

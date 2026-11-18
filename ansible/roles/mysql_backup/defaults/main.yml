@@ -1,0 +1,6 @@
+---
+mysql_backup_dir: /tmp/backup
+mysql_backup_source_host: "{{ groups['mysql'][0] }}"
+# Scratch file for the new dump, kept outside mysql_backup_dir so the directory
+# only changes when the backup does.
+mysql_backup_tmp_file: "/tmp/{{ mysql_database }}.sql.gz.new"

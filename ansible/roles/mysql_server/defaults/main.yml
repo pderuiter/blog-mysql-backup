@@ -1,0 +1,7 @@
+---
+mysql_server_packages:
+  - mysql-server
+  - python3-pymysql
+mysql_server_socket: /run/mysqld/mysqld.sock
+# Privileges mysqldump needs for a consistent logical backup.
+mysql_server_backup_privileges: "*.*:SELECT,LOCK TABLES,SHOW VIEW,TRIGGER,EVENT,PROCESS"

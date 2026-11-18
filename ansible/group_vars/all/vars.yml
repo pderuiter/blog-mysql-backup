@@ -1,0 +1,12 @@
+---
+# Variables from the post. Secrets live in vault.yml (see vault.yml.example).
+mysql_user: backup_ro
+mysql_password: "{{ vault_mysql_password }}"
+mysql_database: appdb
+
+# Path on the backup server where the backup file is copied to.
+backup_dest: "/home/{{ backup_user }}/mysql/"
+
+# SSH key, on the MySQL server, used to connect to the backup server. It belongs to the
+# user Ansible connects as, because synchronize runs rsync on the MySQL server without become.
+ssh_key: ~/.ssh/mysql_backup_ed25519

@@ -1,0 +1,25 @@
+---
+- name: Install rsync (synchronize needs it on both ends)
+  ansible.builtin.apt:
+    name: rsync
+    state: present
+
+- name: Create the backup user
+  ansible.builtin.user:
+    name: "{{ backup_user }}"
+    shell: /bin/bash
+    create_home: true
+
+- name: Create the backup destination directory
+  ansible.builtin.file:
+    path: "{{ backup_dest }}"
+    state: directory
+    owner: "{{ backup_user }}"
+    group: "{{ backup_user }}"
+    mode: "0755"
+
+- name: Authorize the MySQL server's backup key
+  ansible.posix.authorized_key:
+    user: "{{ backup_user }}"
+    key: "{{ hostvars[backup_target_mysql_host]['mysql_backup_public_key'] }}"
+    state: present
